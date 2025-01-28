@@ -1,15 +1,24 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
+    const captionsUrl = "/path/to/captions.vtt";
+    let src = $state(
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    );
+    let videoEl;
 
-    let { data }: { data: PageData } = $props();
-    const captionsUrl = "/path/to/captions.vtt"; // Replace with your actual captions file
+    function onclick() {
+        console.log("Hello");
+        src =
+            src ==
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                ? "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+        videoEl.load(); // Reload the video
+        videoEl.play(); // Play the video after reloading
+    }
 </script>
 
-<video controls>
-    <source
-        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-        type="video/mp4"
-    />
+<video bind:this={videoEl} autoplay muted controls>
+    <source {src} type="video/mp4" />
     <track
         kind="captions"
         src={captionsUrl}
@@ -19,3 +28,5 @@
     />
     Your browser does not support the video tag.
 </video>
+
+<button on:click={onclick}>Change source</button>
